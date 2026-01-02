@@ -1,0 +1,152 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pipper Game</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="img/chess.png" type="image/x-icon">
+  <!-- google font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,800">
+  <!-- font awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- jquery -->
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <!-- gfw -->
+  <link rel="stylesheet" href="css/gfw.min.css">
+  <script src="js/gfw/Built-in.min.js"></script>
+  <script src="js/gfw/SoundPlay.min.js"></script>
+  <script src="js/gfw/MsgBox.min.js"></script>
+  <script src="js/gfw/Timer.min.js"></script>
+  <!-- pipper game -->
+  <link rel="stylesheet" href="css/style.min.css">
+  <script src="js/Map.min.js"></script>
+  <script src="js/Tile.min.js"></script>
+  <script src="js/User.min.js"></script>
+  <script src="js/Ai.min.js"></script>
+  <script src="js/MineReturn.min.js"></script>
+  <script src="js/Next.min.js"></script>
+  <script src="js/PipperGame.min.js"></script>
+</head>
+<body>
+  <header class="logo green">
+	<h1>Pipper Game</h1>
+  </header>
+  <section id="pipper_game" class="container">
+	<header class="row">
+		<div class="state-group">
+			<img src="img/timer_icon.png" alt="">
+			<input type="text" id="timer" class="form-control" value="00:00" title="경과 시간" readonly="readonly">
+			<img src="img/tile_icon.png" alt="">
+			<input type="text" id="tiles" class="form-control" value="16" title="남은 패" readonly="readonly">
+		</div>
+		<div class="profile-group">
+			<span class="profile">
+				<i class="fa fa-user fa-2x text-danger" aria-hidden="true"></i>
+				<span class="name">Com 1</span>
+			</span>
+			<i class="fa fa-angle-right fa-3x text-success" aria-hidden="true"></i>
+			<span class="profile">
+				<i class="fa fa-user fa-2x text-warning" aria-hidden="true"></i>
+				<span class="name">Com 2</span>
+			</span>
+			<i class="fa fa-angle-right fa-3x text-success" aria-hidden="true"></i>
+			<span class="profile">
+				<i class="fa fa-user fa-2x text-success" aria-hidden="true"></i>
+				<span class="name">Com 3</span>
+			</span>
+			<i class="fa fa-angle-right fa-3x text-success" aria-hidden="true"></i>
+			<span class="profile">
+				<i class="fa fa-user fa-2x text-primary" aria-hidden="true"></i>
+				<span class="name">User</span>
+			</span>
+		</div>
+	</header>
+	<article class="content">
+		<div id="prev_tile" class="panel panel-success center-block">
+			<div class="panel-heading">
+				<h3 class="panel-title">이전 플레이어가 버린 패</h3>
+			</div>
+			<div class="panel-body abandon"></div>
+			<div class="panel-footer text-right" tabindex="0">
+				<em class="message"></em>&nbsp;
+			</div>
+		</div>
+		<div id="tile" class="panel panel-info center-block">
+			<div class="panel-heading">
+				<h3 class="panel-title">플레이어가 버릴 패</h3>
+			</div>
+			<div class="panel-body abandon"></div>
+			<div class="panel-footer text-right" tabindex="0">
+				<em class="message"></em>&nbsp;
+			</div>
+		</div>
+		<div class="btn-group-lg text-center">
+			<button id="abandon" class="btn btn-success" title="버리기" accesskey="B">
+				<i class="fas fa-trash-alt" aria-hidden="true"></i>
+			</button>
+			<button id="cancel" class="btn btn-success" title="버리기 취소" accesskey="X">
+				<i class="fas fa-eraser" aria-hidden="true"></i>
+			</button>
+			<button id="pass" class="btn btn-success" title="통과" accesskey="P">
+				<i class="fas fa-undo-alt fa-flip-horizontal" aria-hidden="true"></i>
+			</button>
+		</div>
+		<hr class="star">
+		<div id="state" class="game_print">
+			<span>준비중...</span>
+		</div>
+	</article>
+	<article id="board" class="center-block"></article>
+	<article class="history-group panel panel-primary">
+		<div class="panel-heading">
+			<strong>Pipper Game 기록</strong>
+			<button type="button" class="btn btn-info btn-sm" data-toggle="collapse" data-target="#history" aria-expanded="true" aria-controls="history" aria-label="Pipper Game 기록">
+				<i class="fa fa-chevron-down" aria-hidden="true"></i>
+			</button>
+		</div>
+		<ul id="history" class="collapse in list-group" aria-expanded="true"></ul>
+	</article>
+	<footer class="row">
+		<div class="pull-left">
+			<a href="index.html" class="btn btn-danger">나가기</a>
+			<span class="btn-group" data-toggle="buttons">
+				<label id="sound" class="btn btn-default active">
+					<input type="checkbox" checked="checked" autocomplete="off" title="볼륨">
+					<i class="fa fa-volume-up" aria-hidden="true"></i>
+				</label>
+			</span>
+		</div>
+		<div class="pull-right">
+			<button id="start" class="btn btn-success" accesskey="S">게임시작</button>
+		</div>
+	</footer>
+  </section>
+  <!-- 점수판 -->
+  <div id="score-board" class="modal fade" tabindex="0">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Pipper Game</h4>
+			</div>
+			<div class="modal-body">
+				<ul class="list-group">
+					<!-- <li class="list-group-item"><span><i class="fa fa-user text-danger" aria-hidden="true"></i> Com 1</span><span class="badge"></span></li>
+					<li class="list-group-item"><span><i class="fa fa-user text-warning" aria-hidden="true"></i> Com 2</span><span class="badge"></span></li>
+					<li class="list-group-item"><span><i class="fa fa-user text-success" aria-hidden="true"></i> Com 3</span><span class="badge"></span></li>
+					<li class="list-group-item"><span><i class="fa fa-user text-primary" aria-hidden="true"></i> User</span><span class="badge"></span></li>
+					<li class="list-group-item text-right">경과시간 : <span id="elapsed_time" class="text-success"></span></li> -->
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
+			</div>
+		</div>
+	</div>
+  </div>
+</body>
+</html>
